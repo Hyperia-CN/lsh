@@ -3,6 +3,8 @@
 
 基于对文件元数据的修改，实现了对文件进行注释后无论对文件进行移动、复制、编辑都能查看到对文件的注释。
 
+## Asciicast
+[![asciicast](https://asciinema.org/a/VqC8END8aIy66lIbE0JA9nKSc.svg)](https://asciinema.org/a/VqC8END8aIy66lIbE0JA9nKSc)
 
 ## 项目灵感
 
@@ -65,7 +67,7 @@ Github有许多优秀的开源的项目，但是因为使用不频繁，项目�
     lsh help // 查看帮助
 ```
 
-TODO: 
+## TODO: 
 - [ ] 代码重构、工程结构优化
 - [ ] 适配 Windows、Linux
 - [ ] 增加配置文件
