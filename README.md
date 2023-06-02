@@ -4,7 +4,7 @@
 基于对文件元数据的修改，实现了对文件进行注释后无论对文件进行移动、复制、编辑都能查看到对文件的注释。
 
 ## Asciicast
-[![asciicast](https://asciinema.org/a/VqC8END8aIy66lIbE0JA9nKSc.svg)](https://asciinema.org/a/VqC8END8aIy66lIbE0JA9nKSc)
+[![asciicast](https://asciinema.org/a/R5hpRnTbUeAYIQ7l4G2CVmS80.svg)](https://asciinema.org/a/R5hpRnTbUeAYIQ7l4G2CVmS80)
 
 ## 项目灵感
 
