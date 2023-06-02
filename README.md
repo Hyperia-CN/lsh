@@ -57,6 +57,7 @@ Github有许多优秀的开源的项目，但是因为使用不频繁，项目�
 
 ## 使用帮助
 
+### 命令
 ```bash
     lsh // 查看当前文件夹下的文件包含注释
     lsh [path] // 查看指定文件夹下的文件包含注释
@@ -68,9 +69,9 @@ Github有许多优秀的开源的项目，但是因为使用不频繁，项目�
 ```
 
 ### 配置文件
-Windows配置文件路径：用户配置文件：C:\Users<username>\.lshrc  
-Linux配置文件路径：用户配置文件：/home/<username>/.lshrc  
-Mac配置文件路径：用户配置文件：/Users/<username>/.lshrc
+Windows配置文件路径：C:\Users<username>\.lshrc  
+Linux配置文件路径：/home/<username>/.lshrc  
+Mac配置文件路径：/Users/<username>/.lshrc
 
 - 自定义目录标识符
 - 自定义注释连接符
