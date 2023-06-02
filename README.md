@@ -69,9 +69,11 @@ Github有许多优秀的开源的项目，但是因为使用不频繁，项目�
 ```
 
 ### 配置文件
-Windows配置文件路径：C:\Users<username>\.lshrc  
+```yaml
+Windows配置文件路径：C:\Users<username>\.lshrc
 Linux配置文件路径：/home/<username>/.lshrc  
 Mac配置文件路径：/Users/<username>/.lshrc
+```
 
 - 自定义目录标识符
 - 自定义注释连接符
