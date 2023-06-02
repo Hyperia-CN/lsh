@@ -48,7 +48,7 @@ example:
 				fmt.Println(help)
 				return
 			case "version":
-				fmt.Println("lsh version 0.0.1 (2023-06-01) Beta")
+				fmt.Println("lsh version 1.0.0 (2023-06-02) Beta")
 				return
 			case "show":
 				initialize.RuntimeInfo.ShowHidden = true
@@ -91,7 +91,6 @@ example:
 			} else {
 				fmt.Println("path is not exist !")
 			}
-
 		}
 	},
 }

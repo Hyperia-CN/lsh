@@ -25,8 +25,10 @@ type runtimeInfo struct {
 	ShowHidden bool
 	// 终端宽度
 	TerminalWidth int
-	// 终端颜色映射表
-	ColorMap map[string]string
+	// 配置文件路径
+	ConfigPath string
+	// 终端添加颜色代码
+	ColorCode map[string]map[string]string
 }
 
 var RuntimeInfo runtimeInfo
@@ -45,26 +47,37 @@ func Init() {
 	RuntimeInfo.ShowHidden = false
 	// 初始化终端宽度
 	RuntimeInfo.TerminalWidth, _, _ = terminalSize(os.Stdout)
-	// 初始化终端颜色映射表
-	RuntimeInfo.ColorMap = map[string]string{
-		"black":   "30",
-		"red":     "31",
-		"green":   "32",
-		"yellow":  "33",
-		"blue":    "34",
-		"magenta": "35",
-		"cyan":    "36",
-		"white":   "37",
+	// 初始化配置文件路径
+	if RuntimeInfo.OS == "linux" || RuntimeInfo.OS == "darwin" {
+		RuntimeInfo.ConfigPath = os.Getenv("HOME") + "/.lshrc"
+	} else if RuntimeInfo.OS == "windows" {
+		RuntimeInfo.ConfigPath = os.Getenv("USERPROFILE") + "/.lshrc"
+	}
+
+	// 初始化 Unix 系统终端添加颜色代码
+	RuntimeInfo.ColorCode = map[string]map[string]string{
+		"darwin": {
+			"start": "\033[%sm",
+			"end":   "\033[0m",
+		},
+		"linux": {
+			"start": "\033[%sm",
+			"end":   "\033[0m",
+		},
+		"windows": {
+			"start": "",
+			"end":   "",
+		},
 	}
 }
 
 func terminalSize(w io.Writer) (int, int, error) {
-	//GetFdInfo返回操作系统的文件描述符。文件并指示该文件是否表示终端。
+	// GetFdInfo 返回操作系统的文件描述符。文件并指示该文件是否表示终端。
 	outFd, isTerminal := term.GetFdInfo(w)
 	if !isTerminal {
 		return 0, 0, fmt.Errorf("given writer is no terminal")
 	}
-	//GetWinsize根据指定的文件描述符返回窗口大小。
+	// GetWinsize 根据指定的文件描述符返回窗口大小。
 	winsize, err := term.GetWinsize(outFd)
 	if err != nil {
 		return 0, 0, err

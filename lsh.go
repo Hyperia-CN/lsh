@@ -10,10 +10,12 @@ package main
 
 import (
 	"lsh/cmd"
+	"lsh/configs"
 	"lsh/initialize"
 )
 
 func main() {
 	initialize.Init()
+	configs.InitConfigs()
 	cmd.Execute()
 }

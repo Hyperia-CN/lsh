@@ -67,14 +67,51 @@ Github有许多优秀的开源的项目，但是因为使用不频繁，项目�
     lsh help // 查看帮助
 ```
 
+### 配置文件
+Windows配置文件路径：用户配置文件：C:\Users<username>\.lshrc  
+Linux配置文件路径：用户配置文件：/home/<username>/.lshrc  
+Mac配置文件路径：用户配置文件：/Users/<username>/.lshrc
+
+- 自定义目录标识符
+- 自定义注释连接符
+- 自定义注释颜色
+- 自定义高亮配色方案
+- 自定义注释输出方式
+- 自定义颜色映射
+
+```yaml
+dirindicator: true  # 是否添加目录标识符 「true/false」
+dirindicatorstr: /  # 目录标识符 「string」
+commentconnector: <-- # 注释连接符 「string」
+commentalone: true  # 有注释的文件是否单独一行输出 「true/false」
+commentcolor: yellow  # 注释颜色 「black/red/green/yellow/blue/magenta/cyan/white」
+highlightscheme:  # 高亮配色方案 「default/monokai」
+    dir: cyan # 目录
+    executable: red # 可执行文件
+    file: white # 文件
+    hiddenDir: cyan # 隐藏目录
+    hiddenFile: white # 隐藏文件
+    other: white  # 其他
+commentoutput: default  # 注释输出方式 「default/start/end」
+colormap: # 颜色映射
+    black: "30"
+    blue: "34"
+    cyan: "36"
+    green: "32"
+    magenta: "35"
+    red: "31"
+    white: "37"
+    yellow: "33"
+```
+
 ## TODO: 
 - [ ] 代码重构、工程结构优化
 - [ ] 适配 Windows、Linux
-- [ ] 增加配置文件
-- [ ] 增加自定义高亮配色
+- [x] 增加配置文件
+- [x] 增加自定义高亮配色
 - [ ] 使用新的命令行参数解决方案
 - [ ] 头脑风暴中...
 
 ## License
-yd lsh is released under the MIT license. See [MIT](https://choosealicense.com/licenses/mit/)
+lsh is released under the MIT license. See [MIT](https://choosealicense.com/licenses/mit/)
 

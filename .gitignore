@@ -19,3 +19,21 @@
 
 # Go workspace file
 go.work
+
+
+# Goland
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Mac Temp Files
+.DS_Store
+
+# Executables
+lsh
+test
+bin/
+
+# test files
+test.go
