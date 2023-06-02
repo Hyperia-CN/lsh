@@ -48,7 +48,7 @@ example:
 				fmt.Println(help)
 				return
 			case "version":
-				fmt.Println("lsh version 1.0.0 (2023-06-02) Beta")
+				fmt.Println("lsh version 1.0.1 (2023-06-02) Beta")
 				return
 			case "show":
 				initialize.RuntimeInfo.ShowHidden = true
@@ -67,12 +67,14 @@ example:
 				// 匹配命令
 				switch args[1] {
 				case "add":
-					// 检查是否存在args[2]
-					if len(args) != 3 {
-						fmt.Printf("add must with comment !\n")
-						return
+					comment := ""
+					for i := 2; i < len(args); i++ {
+						comment += args[i]
+						if i != len(args)-1 {
+							comment += " "
+						}
 					}
-					err := lib.SetAttr(args[0], "user.comment", args[2])
+					err := lib.SetAttr(args[0], "user.comment", comment)
 					if err != nil {
 						fmt.Printf("add comment %s to %s failed\n", args[2], args[0])
 					} else {
@@ -85,6 +87,9 @@ example:
 					} else {
 						fmt.Printf("delete comment from %s success\n", args[0])
 					}
+				case "show":
+					initialize.RuntimeInfo.ShowHidden = true
+					lib.GetFileList(args[0])
 				default:
 					fmt.Printf("command %s is error !\n", args[1])
 				}

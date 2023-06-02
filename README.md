@@ -63,6 +63,7 @@ Github有许多优秀的开源的项目，但是因为使用不频繁，项目�
     lsh [path] // 查看指定文件夹下的文件包含注释
     lsh [path] add [comment] // 为指定文件夹添加注释
     lsh [path] del // 删除指定文件夹的注释
+    lsh [path] show // 显示指定文件夹的隐藏文件
     lsh show // 显示隐藏文件
     lsh version // 查看版本号
     lsh help // 查看帮助
