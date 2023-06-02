@@ -10,99 +10,158 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
+	"lsh/configs"
 	"lsh/initialize"
 	"lsh/lib"
 	"os"
 )
 
-var rootCmd = &cobra.Command{
-	Use:   "lsh [command] [args]",
-	Short: "lsh is a CLI tool for managing file comments",
-	Run: func(cmd *cobra.Command, args []string) {
-		// 命令行解析
-		if len(args) == 0 {
-			lib.GetFileList(initialize.RuntimeInfo.RuntimePath)
-		} else if len(args) == 1 {
-			// 只有一个参数则为路径或者命令
-			switch args[0] {
-			case "help":
-				help := `lsh is a CLI tool for managing file comments.
-		Powered by Hyperia.
+var lsCmd = Command{
+	name: "ls",
+	run: func() {
+		lib.GetFileList(Args.path)
+	},
+}
 
-Usage:
-	lsh			show file list in current path.
-	lsh [path]		show file list in path.
-	lsh [path] [command]	execute command in path.
-
-Commands:
-	add [comment]	add or update a comment to a file.
-	del		delete a comment from a file.
-	help		view usage help.
-	version		view version.
-	show 		show hidden files
-
-example:
-	lsh /home/user add "this is a comment"		add a comment to a file.
-	lsh /home/user del				delete a comment from a file.`
-				fmt.Println(help)
-				return
-			case "version":
-				fmt.Println("lsh version 1.0.1 (2023-06-02) Beta")
-				return
-			case "show":
-				initialize.RuntimeInfo.ShowHidden = true
-				lib.GetFileList(initialize.RuntimeInfo.RuntimePath)
-				return
-			}
-			// 校验路径是否正确
-			if lib.CheckPathExist(args[0]) {
-				lib.GetFileList(args[0])
+var addCmd = Command{
+	name:  "add",
+	short: "a",
+	run: func() {
+		if Args.comment != "" {
+			err := lib.SetAttr(Args.path, "user.comment", Args.comment)
+			if err != nil {
+				lib.PrintError(err.Error())
 			} else {
-				fmt.Println("path or command is error !")
+				fmt.Printf("add comment \"%s\" to %s success\n", Args.comment, Args.path)
 			}
-		} else if len(args) >= 2 {
-			// 检查args[0]是否为路径
-			if lib.CheckPathExist(args[0]) {
-				// 匹配命令
-				switch args[1] {
-				case "add":
-					comment := ""
-					for i := 2; i < len(args); i++ {
-						comment += args[i]
-						if i != len(args)-1 {
-							comment += " "
-						}
-					}
-					err := lib.SetAttr(args[0], "user.comment", comment)
-					if err != nil {
-						fmt.Printf("add comment %s to %s failed\n", args[2], args[0])
-					} else {
-						fmt.Printf("add comment %s to %s success\n", args[2], args[0])
-					}
-				case "del":
-					err := lib.DelAttr(args[0], "user.comment")
-					if err != nil {
-						fmt.Printf("delete comment from %s failed\n", args[0])
-					} else {
-						fmt.Printf("delete comment from %s success\n", args[0])
-					}
-				case "show":
-					initialize.RuntimeInfo.ShowHidden = true
-					lib.GetFileList(args[0])
-				default:
-					fmt.Printf("command %s is error !\n", args[1])
-				}
-			} else {
-				fmt.Println("path is not exist !")
-			}
+		} else {
+			lib.PrintError("comment is empty")
 		}
 	},
 }
 
-func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
-	}
+var delCmd = Command{
+	name:  "del",
+	short: "d",
+	run: func() {
+		err := lib.DelAttr(Args.path, "user.comment")
+		if err != nil {
+			lib.PrintError(err.Error())
+		} else {
+			fmt.Printf("del comment from %s success\n", Args.path)
+		}
+	},
+}
+
+var showCmd = Command{
+	name:  "show",
+	short: "s",
+	run: func() {
+		initialize.RuntimeInfo.ShowHidden = true
+		lib.GetFileList(Args.path)
+	},
+}
+
+var headCmd = Command{
+	name:  "head",
+	short: "h",
+	run: func() {
+		configs.UserConfigs.CommentOutput = "head"
+		lib.GetFileList(Args.path)
+	},
+}
+
+var endCmd = Command{
+	name:  "tail",
+	short: "t",
+	run: func() {
+		configs.UserConfigs.CommentOutput = "tail"
+		lib.GetFileList(Args.path)
+	},
+}
+
+var versionCmd = Command{
+	name:  "version",
+	short: "v",
+	run: func() {
+		fmt.Printf("lsh version %s\n", initialize.RuntimeInfo.Version)
+	},
+}
+
+var helpCmd = Command{
+	name:  "help",
+	short: "H",
+	run: func() {
+		fmt.Println(initialize.RuntimeInfo.Help)
+	},
+}
+
+func Init() {
+	var commands Commands
+	// 注册命令
+	commands.Register(&versionCmd)
+	commands.Register(&helpCmd)
+	commands.Register(&lsCmd)
+	commands.Register(&addCmd)
+	commands.Register(&delCmd)
+	commands.Register(&showCmd)
+	commands.Register(&headCmd)
+	commands.Register(&endCmd)
+
+	// 解析参数
+	Args.RunParams(func(p *Params) *Params {
+		// 去除执行文件名
+		os.Args = os.Args[1:]
+		// 首先检查是否有参数
+		if len(os.Args) == 0 {
+			// 没有参数则path为当前路径
+			Args.path = initialize.RuntimeInfo.RuntimePath
+			Args.command = "ls"
+			return p
+		} else {
+			// 首先检查第一个参数是否为路径
+			if lib.CheckPathExist(os.Args[0]) {
+				Args.path = os.Args[0]
+				if len(os.Args) >= 2 {
+					// 如果有参数则检查是否为命令
+					if cmd := commands.FindCommand(os.Args[1:2]); cmd != nil {
+						Args.command = cmd.name
+						if len(os.Args) >= 3 {
+							for i := 2; i < len(os.Args); i++ {
+								Args.comment = Args.comment + os.Args[i] + " "
+							}
+						}
+						return p
+					} else {
+						return p
+					}
+				} else {
+					Args.command = "ls"
+					return p
+				}
+			} else {
+				// 如果第一个参数不是路径则设置路径为当前路径
+				Args.path = initialize.RuntimeInfo.RuntimePath
+				if len(os.Args) == 1 {
+					// 如果不是路径则检查是否为命令
+					if cmd := commands.FindCommand(os.Args); cmd != nil {
+						Args.command = cmd.name
+						return p
+					} else {
+						// 如果挤既不是路径也不是命令则报错
+						lib.PrintError("invalid command or path：", os.Args)
+						os.Exit(-1)
+					}
+				} else {
+					// 如果第一个参数既不是路径也不是命令则报错
+					lib.PrintError("invalid command or path：", os.Args)
+					os.Exit(-1)
+				}
+
+			}
+		}
+		return p
+	})
+	// 执行命令
+	commands.Execute()
 }

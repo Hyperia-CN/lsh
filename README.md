@@ -35,13 +35,13 @@ Github有许多优秀的开源的项目，但是因为使用不频繁，项目�
 我将非常感谢你提供的帮助和建议，并将尽快考虑并采纳它们。最后，我希望这个工具能够帮助更多的人更好地管理和使用他们的项目，感谢你的支持！
 
 ## 功能介绍
-1. 支持对指定的「文件/文件夹」「创建/查看」**注释**
+1. 支持对指定的「文件/文件夹」「创建/查看/删除」**注释**
 2. 支持基本的ls文件查看功能
 3. 高亮显示
 
 ## 安装
 ### Windows install -- 暂不支持
-1. 下载[release]()
+1. 下载 [release]()
 2. 将下载的文件放入到环境变量中
 3. 打开cmd，输入lsh version，如果出现版本号，则安装成功
 
@@ -96,8 +96,8 @@ highlightscheme:  # 高亮配色方案 「default/monokai」
     hiddenDir: cyan # 隐藏目录
     hiddenFile: white # 隐藏文件
     other: white  # 其他
-commentoutput: default  # 注释输出方式 「default/start/end」
-colormap: # 颜色映射
+commentoutput: default  # 注释输出方式 「default/head/tail」
+colormap: # 颜色映射 注意：颜色映射 id 为终端渲染的 ANSI 颜色 id
     black: "30"
     blue: "34"
     cyan: "36"
@@ -109,12 +109,26 @@ colormap: # 颜色映射
 ```
 
 ## TODO: 
-- [ ] 代码重构、工程结构优化
-- [ ] 适配 Windows、Linux
 - [x] 增加配置文件
 - [x] 增加自定义高亮配色
-- [ ] 使用新的命令行参数解决方案
+- [ ] 适配 Windows、Linux
+- [x] 代码重构、工程结构优化
+- [x] 使用新的命令行参数解决方案
 - [ ] 头脑风暴中...
+
+
+## 更新日志
+### v1.0.2 (2023-06-02) Beta
+- 增加短参数支持
+- show 命令增加对指定路径的支持
+- 增加 head 和 end 命令可以自定义注释输出位置
+- 放弃使用 cobra 解析命令行参数，自行抽象参数功能
+
+### v1.0.0 (2023-06-01) Beta
+- 增加自定义配置文件
+
+### v0.0.1 (2023-05-31) Beta
+- 实现基本功能
 
 ## License
 lsh is released under the MIT license. See [MIT](https://choosealicense.com/licenses/mit/)

@@ -29,6 +29,10 @@ type runtimeInfo struct {
 	ConfigPath string
 	// 终端添加颜色代码
 	ColorCode map[string]map[string]string
+	// 版本号
+	Version string
+	// 帮助信息
+	Help string
 }
 
 var RuntimeInfo runtimeInfo
@@ -69,6 +73,32 @@ func Init() {
 			"end":   "",
 		},
 	}
+
+	// 初始化版本号
+	RuntimeInfo.Version = "v1.0.2 (2023-06-02) Beta"
+	// 初始化帮助信息
+	RuntimeInfo.Help = `lsh is a CLI tool for managing file comments.
+		Powered by Hyperia.
+
+Usage:
+	lsh			show file list in current path.
+	lsh [path]		show file list in path.
+	lsh [path] [command]	execute Command in path.
+
+Commands:
+    command|short    args	description
+	add|a	  [comment]	add or update a comment to a file.
+	del|d			delete a comment from a file.
+	show|s 			show hidden files.
+	head|h			show comment in head.
+	tail|t			show comment in tail.
+	help|H			view usage help.
+	version|v		view version.
+
+Example:
+	lsh /home/user add "comment"	add a comment to a file.
+	lsh /home/user del		delete a comment from a file.
+	lsh /home/user show		show hidden files.`
 }
 
 func terminalSize(w io.Writer) (int, int, error) {
@@ -84,26 +114,3 @@ func terminalSize(w io.Writer) (int, int, error) {
 	}
 	return int(winsize.Width), int(winsize.Height), nil
 }
-
-// 旧的获取终端宽度方法
-//func GetTerminalWidth() (int, error) {
-//	var cmd *exec.Cmd
-//	switch initialize.RuntimeInfo.OS {
-//	case "linux":
-//		cmd = exec.Command("stty", "size")
-//	case "darwin":
-//		cmd = exec.Command("stty", "size")
-//	case "windows":
-//		cmd = exec.Command("powershell", "Get-Host", "|", "Select-Object", "Width")
-//	}
-//	cmd.Stdin = os.Stdin
-//	out, err := cmd.Output()
-//	if err != nil {
-//		return 0, err
-//	}
-//	width, err := strconv.Atoi(strings.Replace(strings.Split(string(out), " ")[1], "\n", "", -1))
-//	if err != nil {
-//		return 0, err
-//	}
-//	return width, nil
-//}

@@ -33,8 +33,13 @@ func PrintFileList(fileList []*fileStruct) {
 func formatStdOut(file *fileStruct) {
 	// 根据操作系统类型、文件类型对fileStruct中的name进行格式化并修改fileStruct中的name
 	// 接收参数：file *fileStruct
+
+	// 是否添加目录标识符
 	if configs.UserConfigs.DirIndicator {
-		file.name += configs.UserConfigs.DirIndicatorStr
+		// 修正BUG: 忘记判断是否为目录
+		if file.fileType == "dir" || file.fileType == "hiddenDir" {
+			file.name += configs.UserConfigs.DirIndicatorStr
+		}
 	}
 
 	// 有注释的文件加上注释内容
@@ -45,47 +50,43 @@ func formatStdOut(file *fileStruct) {
 	// 根据文件类型对文件名进行颜色格式化
 	// 检查 file.fileType 是否在 configs.UserConfigs.HighlightScheme 中
 	if _, ok := configs.UserConfigs.HighlightScheme[file.fileType]; ok {
-		file.color = addColor(file.name, configs.UserConfigs.HighlightScheme[file.fileType])
+		file.color = echoColor(file.name, configs.UserConfigs.HighlightScheme[file.fileType])
 	} else {
-		file.color = addColor(file.name, "white")
+		file.color = echoColor(file.name, "white")
 	}
 }
 
-func addColor(str string, color string) string {
+func echoColor(str string, color string) string {
 	// 对字符串进行颜色格式化
 	// 判断是否为有效颜色
 	if _, ok := configs.UserConfigs.ColorMap[color]; ok {
 		//return fmt.Sprintf("\033[%sm%s\033[0m", initialize.RuntimeInfo.ColorMap[color], str)
 		// 判断有无注释，有注释的话对文件名和注释分别进行颜色格式化
 		if strings.Contains(str, configs.UserConfigs.CommentConnector) && configs.UserConfigs.CommentAlone {
+			tmpStr := ""
 			splitStr := strings.Split(str, configs.UserConfigs.CommentConnector)
-			// 给文件名进行颜色渲染
-			tmpStr := initialize.RuntimeInfo.ColorCode[initialize.RuntimeInfo.OS]["start"]
-			tmpStr += splitStr[0]
-			tmpStr += initialize.RuntimeInfo.ColorCode[initialize.RuntimeInfo.OS]["end"]
+			tmpStr += AddColor(splitStr[0], color)
 			// 连接注释连接符
 			tmpStr += configs.UserConfigs.CommentConnector
 			// 给注释进行颜色渲染
-			tmpStr += initialize.RuntimeInfo.ColorCode[initialize.RuntimeInfo.OS]["start"]
-			tmpStr += splitStr[1]
-			tmpStr += initialize.RuntimeInfo.ColorCode[initialize.RuntimeInfo.OS]["end"]
+			tmpStr += AddColor(splitStr[1], configs.UserConfigs.CommentColor)
 			// 给文件名进行颜色渲染
-			tmpStr = fmt.Sprintf(
-				tmpStr,
-				configs.UserConfigs.ColorMap[color],
-				configs.UserConfigs.ColorMap[configs.UserConfigs.CommentColor])
 			return tmpStr
 			// 连接注释连接符
 			// 给注释进行颜色渲染
 		} else {
-			tmpStr := initialize.RuntimeInfo.ColorCode[initialize.RuntimeInfo.OS]["start"]
-			tmpStr += str
-			tmpStr += initialize.RuntimeInfo.ColorCode[initialize.RuntimeInfo.OS]["end"]
-			return fmt.Sprintf(tmpStr, configs.UserConfigs.ColorMap[color])
+			return AddColor(str, color)
 		}
 	} else {
 		return str
 	}
+}
+
+func AddColor(str string, color string) string {
+	tmpStr := initialize.RuntimeInfo.ColorCode[initialize.RuntimeInfo.OS]["start"]
+	tmpStr += str
+	tmpStr += initialize.RuntimeInfo.ColorCode[initialize.RuntimeInfo.OS]["end"]
+	return fmt.Sprintf(tmpStr, configs.UserConfigs.ColorMap[color])
 }
 
 func printFileNames(fileList []*fileStruct) {
@@ -103,11 +104,11 @@ func printFileNames(fileList []*fileStruct) {
 		// 处理注释文件输出样式
 		if strings.Contains(file.name, configs.UserConfigs.CommentConnector) {
 			switch configs.UserConfigs.CommentOutput {
-			case "start":
+			case "head":
 				// 在头部输出有注释的文件
 				fmt.Println(file.color)
 				continue
-			case "end":
+			case "tail":
 				// 在尾部输出有注释的文件
 				continue
 			case "default":
@@ -135,7 +136,7 @@ func printFileNames(fileList []*fileStruct) {
 	}
 
 	// 当输出模式为end时，输出有注释的文件
-	if configs.UserConfigs.CommentOutput == "end" {
+	if configs.UserConfigs.CommentOutput == "tail" {
 		for _, file := range fileList {
 			if strings.Contains(file.name, configs.UserConfigs.CommentConnector) {
 				fmt.Println(file.color)
@@ -152,4 +153,19 @@ func length(str string) int {
 		width += runewidth.RuneWidth(c)
 	}
 	return width
+}
+
+// PrintError 打印错误信息
+func PrintError(errMessage string, args ...[]string) {
+	// 如果有args则先格式化错误信息
+	if len(args) > 0 {
+		for _, arg := range args {
+			//errMessage += arg + " "
+			for _, str := range arg {
+				errMessage += str + " "
+			}
+		}
+	}
+	// 打印错误信息
+	fmt.Println(AddColor(errMessage, "red"))
 }

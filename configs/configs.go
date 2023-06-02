@@ -34,7 +34,7 @@ type configs struct {
 	// 高亮配色方案
 	HighlightScheme map[string]string // {文件类型：颜色}
 	// 注释打印样式
-	CommentOutput string // "default" | "start" | "end"
+	CommentOutput string // "default" | "head" | "tail"
 	// 终端颜色映射表
 	ColorMap map[string]string // {颜色：颜色值}
 }

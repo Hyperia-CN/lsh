@@ -17,5 +17,5 @@ import (
 func main() {
 	initialize.Init()
 	configs.InitConfigs()
-	cmd.Execute()
+	cmd.Init()
 }
