@@ -75,7 +75,7 @@ func Init() {
 	}
 
 	// 初始化版本号
-	RuntimeInfo.Version = "v1.0.2 (2023-06-02) Beta"
+	RuntimeInfo.Version = "v1.0.3 (2023-06-03) Beta"
 	// 初始化帮助信息
 	RuntimeInfo.Help = `lsh is a CLI tool for managing file comments.
 		Powered by Hyperia.
@@ -90,6 +90,7 @@ Commands:
 	add|a	  [comment]	add or update a comment to a file.
 	del|d			delete a comment from a file.
 	show|s 			show hidden files.
+	tree|T			show file tree.
 	head|h			show comment in head.
 	tail|t			show comment in tail.
 	help|H			view usage help.
@@ -98,7 +99,8 @@ Commands:
 Example:
 	lsh /home/user add "comment"	add a comment to a file.
 	lsh /home/user del		delete a comment from a file.
-	lsh /home/user show		show hidden files.`
+	lsh /home/user show		show hidden files.
+	lsh /home/user tree		show file tree.`
 }
 
 func terminalSize(w io.Writer) (int, int, error) {

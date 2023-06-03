@@ -15,6 +15,8 @@ import (
 	"lsh/configs"
 	"lsh/initialize"
 	"math"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -22,12 +24,80 @@ import (
 // 模拟ls命令对文件进行格式化输出、根据文件类型进行颜色区分
 // 接收参数：文件结构体列表
 
+// PrintFileList ls格式输出
 func PrintFileList(fileList []*fileStruct) {
 	// 遍历文件列表
 	for _, file := range fileList {
 		formatStdOut(file)
 	}
 	printFileNames(fileList)
+}
+
+// PrintTree 树形输出
+func PrintTree(path string, prefix string) error {
+	info, err := os.Stat(path)
+	if err != nil {
+		return err
+	}
+
+	if !info.IsDir() {
+		return nil
+	}
+
+	files, err := os.ReadDir(path)
+	if err != nil {
+		return err
+	}
+
+	// 遍历文件列表
+	for i, file := range files {
+		var (
+			isLast       = i == len(files)-1
+			nestedPath   = filepath.Join(path, file.Name())
+			nestedPrefix string
+			f            = &fileStruct{}
+		)
+
+		// 初始化文件结构体
+		f.init(file.Name(), nestedPath)
+
+		// 判断是否为隐藏文件
+		// 处理隐藏文件
+		if f.fileType == "hiddenDir" || f.fileType == "hiddenFile" {
+			// 判断是否显示隐藏文件
+			if !initialize.RuntimeInfo.ShowHidden {
+				continue // 跳过隐藏文件
+			}
+		}
+
+		// 处理是否显示无注释文件
+		if !configs.UserConfigs.ShowNoComment["tree"] {
+			if f.comment == "" {
+				continue
+			}
+		}
+
+		fileList = append(fileList, f)
+
+		// 格式化输出
+		formatStdOut(f)
+
+		// 添加树形结构
+		if isLast {
+			fmt.Printf("%s└── %s\n", prefix, f.color)
+			nestedPrefix = prefix + "    "
+		} else {
+			fmt.Printf("%s├── %s\n", prefix, f.color)
+			nestedPrefix = prefix + "│   "
+		}
+
+		// 递归调用，打印子目录
+		if err := PrintTree(nestedPath, nestedPrefix); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func formatStdOut(file *fileStruct) {
@@ -98,6 +168,13 @@ func printFileNames(fileList []*fileStruct) {
 			// 判断是否显示隐藏文件
 			if !initialize.RuntimeInfo.ShowHidden {
 				continue // 跳过隐藏文件
+			}
+		}
+
+		// 处理是否显示无注释文件
+		if !configs.UserConfigs.ShowNoComment["ls"] {
+			if file.comment == "" {
+				continue
 			}
 		}
 

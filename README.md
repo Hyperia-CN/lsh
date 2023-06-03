@@ -38,6 +38,7 @@ Github有许多优秀的开源的项目，但是因为使用不频繁，项目�
 1. 支持对指定的「文件/文件夹」「创建/查看/删除」**注释**
 2. 支持基本的ls文件查看功能
 3. 高亮显示
+4. 支持树形结构显示
 
 ## 安装
 ### Windows install -- 暂不支持
@@ -84,10 +85,13 @@ Mac配置文件路径：/Users/<username>/.lshrc
 - 自定义颜色映射
 
 ```yaml
+shownocomment:  # 是否显示没有注释的文件
+  ls: true   # 注意：默认调用ls命令，如果不想显示没有注释的文件，可以设置为false
+  tree: false # 当使用tree参数时，是否显示没有注释的文件。建议设置为false否则会显示所有子文件夹的文件
 dirindicator: true  # 是否添加目录标识符 「true/false」
 dirindicatorstr: /  # 目录标识符 「string」
 commentconnector: <-- # 注释连接符 「string」
-commentalone: true  # 有注释的文件是否单独一行输出 「true/false」
+commentalone: true  # 注释单独渲染颜色 「true/false」
 commentcolor: yellow  # 注释颜色 「black/red/green/yellow/blue/magenta/cyan/white」
 highlightscheme:  # 高亮配色方案 「default/monokai」
     dir: cyan # 目录
@@ -114,10 +118,16 @@ colormap: # 颜色映射 注意：颜色映射 id 为终端渲染的 ANSI 颜色
 - [ ] 适配 Windows、Linux
 - [x] 代码重构、工程结构优化
 - [x] 使用新的命令行参数解决方案
+- [ ] 增加 install 命令进行安装
+- [ ] 增加 upgrade 命令进行升级
 - [ ] 头脑风暴中...
 
 
 ## 更新日志
+### v1.0.3 (2023-06-03) Beta
+- 增加tree命令，可以查看指定目录下的文件树
+- 增加配置文件自定义是否显示没有注释的文件
+
 ### v1.0.2 (2023-06-02) Beta
 - 增加短参数支持
 - show 命令增加对指定路径的支持

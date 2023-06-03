@@ -21,6 +21,8 @@ import (
 
 // UserConfigs 配置文件结构体
 type configs struct {
+	// 默认是否显示无注释文件
+	ShowNoComment map[string]bool // {tree: false, ls: true}
 	// 是否添加目录标识符
 	DirIndicator bool // true | false
 	// 目录标识符
@@ -41,6 +43,11 @@ type configs struct {
 
 // 默认配置项，用于初始化配置文件
 var defaultConfigs = configs{
+	// 默认是否显示无注释文件
+	ShowNoComment: map[string]bool{
+		"tree": false,
+		"ls":   true,
+	},
 	// 是否添加目录标识符
 	DirIndicator: true,
 	// 目录标识符

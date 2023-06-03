@@ -62,6 +62,14 @@ var showCmd = Command{
 	},
 }
 
+var treeCmd = Command{
+	name:  "tree",
+	short: "T",
+	run: func() {
+		lib.GetFileTree(Args.path)
+	},
+}
+
 var headCmd = Command{
 	name:  "head",
 	short: "h",
@@ -107,6 +115,7 @@ func Init() {
 	commands.Register(&showCmd)
 	commands.Register(&headCmd)
 	commands.Register(&endCmd)
+	commands.Register(&treeCmd)
 
 	// 解析参数
 	Args.RunParams(func(p *Params) *Params {
@@ -126,10 +135,18 @@ func Init() {
 					// 如果有参数则检查是否为命令
 					if cmd := commands.FindCommand(os.Args[1:2]); cmd != nil {
 						Args.command = cmd.name
-						if len(os.Args) >= 3 {
+						// 增加验证，如果是add命令则检查是否有comment参数
+						if len(os.Args) >= 3 && cmd.name == "add" {
 							for i := 2; i < len(os.Args); i++ {
 								Args.comment = Args.comment + os.Args[i] + " "
 							}
+							// 如果有comment参数但命令不是add则报错
+						} else if len(os.Args) >= 3 {
+							lib.PrintError("invalid comment：", os.Args)
+							os.Exit(-1)
+						} else {
+							// 执行命令
+							return p
 						}
 						return p
 					} else {

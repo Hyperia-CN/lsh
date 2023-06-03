@@ -10,8 +10,8 @@ package lib
 
 import (
 	"fmt"
-	"lsh/initialize"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -44,7 +44,6 @@ func (f *fileStruct) getData() {
 	// 读取文件注释
 }
 
-// 文件类型判断
 func (f *fileStruct) checkFileType() string {
 	file, err := os.Stat(f.path)
 	if err != nil {
@@ -67,16 +66,32 @@ func (f *fileStruct) checkFileType() string {
 	}
 
 	if file.Mode().IsRegular() {
-		if initialize.RuntimeInfo.OS == "darwin" || initialize.RuntimeInfo.OS == "linux" {
-			if file.Mode()&0111 != 0 {
-				return "executable"
-			}
-		} else if initialize.RuntimeInfo.OS == "windows" {
-			if strings.HasSuffix(strings.ToLower(fileName), ".exe") {
-				return "executable"
+		if file.Mode()&0111 != 0 {
+			return "executable"
+		} else {
+			// 增加支持的文件类型
+			ext := strings.ToLower(filepath.Ext(f.name))
+			switch ext {
+			case ".txt", ".log", ".md":
+				return "text"
+			case ".doc", ".docx":
+				return "document"
+			case ".ppt", ".pptx":
+				return "presentation"
+			case ".xls", ".xlsx":
+				return "spreadsheet"
+			case ".jpg", ".jpeg", ".png", ".bmp", ".gif":
+				return "image"
+			case ".mp3", ".wav", ".flac", ".ogg":
+				return "audio"
+			case ".mp4", ".mov", ".avi", ".mkv":
+				return "video"
+			default:
+				return "file"
 			}
 		}
 	}
+
 	return "file"
 }
 
@@ -93,6 +108,14 @@ func GetFileList(path string) {
 		fileList = append(fileList, &f)
 	}
 	PrintFileList(fileList)
+}
+
+// GetFileTree 获取指定路径下的文件树
+func GetFileTree(path string) {
+	fmt.Println(path)
+	if err := PrintTree(path, ""); err != nil {
+		fmt.Println(err)
+	}
 }
 
 // CheckPathExist 检查文件路径是否存在
