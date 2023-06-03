@@ -33,6 +33,8 @@ type configs struct {
 	CommentAlone bool // true | false
 	// 注释渲染颜色
 	CommentColor string // "red" | "green" | "blue" | "yellow" | "magenta" | "cyan" | "white"
+	// 后缀名分类
+	SuffixClassify map[string][]string // {文件类型：[后缀名]}
 	// 高亮配色方案
 	HighlightScheme map[string]string // {文件类型：颜色}
 	// 注释打印样式
@@ -65,6 +67,7 @@ var defaultConfigs = configs{
 		"dir":        "cyan",
 		"hiddenDir":  "cyan",
 		"executable": "red",
+		"code":       "green",
 		"other":      "white",
 	},
 	CommentOutput: "default",
@@ -77,6 +80,18 @@ var defaultConfigs = configs{
 		"magenta": "35",
 		"cyan":    "36",
 		"white":   "37",
+	},
+	// 后缀名分类
+	SuffixClassify: map[string][]string{
+		"image":   {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".ico", ".webp", ".tif", ".tiff", ".pcx", ".tga", ".exif", ".fpx", ".svg", ".psd", ".cdr", ".pcd", ".dxf", ".ufo", ".eps", ".ai", ".raw", ".WMF"},
+		"video":   {".avi", ".mov", ".rmvb", ".rm", ".flv", ".mp4", ".3gp", ".mpeg", ".mpg", ".dat", ".mkv", ".wmv", ".asf", ".asx", ".vob"},
+		"audio":   {".mp3", ".aac", ".wav", ".wma", ".cda", ".flac", ".m4a", ".mid", ".mka", ".mp2", ".mpa", ".mpc", ".ape", ".ofr", ".ogg", ".ra", ".wv", ".tta", ".ac3", ".dts"},
+		"doc":     {".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".txt", ".md", ".wps", ".rtf", ".csv", ".pps", ".et", ".dps", ".pot", ".pps", ".xlt", ".xlw", ".dot", ".xml", ".html", ".htm", ".mht", ".mhtml", ".chm", ".epub", ".mobi", ".fb2", ".djvu", ".ps", ".xps", ".oxps", ".dotx", ".dotm", ".docm", ".docm", ".dotm", ".xlsb", ".xlsm", ".xltx", ".xltm", ".xlam", ".pptm", ".potm", ".ppam", ".ppsm", ".sldm", ".thmx", ".xps", ".oxps"},
+		"archive": {".zip", ".rar", ".7z", ".arj", ".z", ".gz", ".bz2", ".tar", ".iso", ".cab", ".jar", ".ace", ".lzh", ".uue", ".gzip", ".7zip"},
+		"code":    {".go", ".py", ".java", ".c", ".cpp", ".h", ".hpp", ".cs", ".php", ".js", ".ts", ".css", ".scss", ".less", ".html", ".htm", ".json", ".xml", ".yaml", ".yml", ".ini", ".toml", ".conf", ".sh", ".bat", ".cmd", ".ps1", ".vbs", ".lua", ".rb", ".pl", ".swift", ".scala", ".coffee", ".dart", ".erl", ".hs", ".lisp", ".clj", ".groovy", ".as", ".m", ".mm", ".php", ".py"},
+		"font":    {".ttf", ".ttc", ".otf", ".woff", ".woff2", ".eot", ".fon"},
+		"exe":     {".exe", ".msi", ".bat", ".cmd", ".com", ".reg", ".vb", ".vbs", ".vbe", ".js", ".jse", ".ws", ".wsf", ".wsc", ".wsh", ".ps1", ".ps1xml", ".ps2", ".ps2xml", ".psc1", ".psc2", ".msh", ".msh1", ".msh2", ".mshxml", ".msh1xml", ".msh2xml", ".scf", ".lnk", ".inf", ".reg", ".dll", ".sys", ".drv", ".cpl", ".ocx", ".ax", ".acm", ".ax", ".cpl", ".drv", ".efi", ".exe", ".mui", ".ocx", ".scr", ".sys", ".tsp", ".dll", ".exe", ".mui", ".ocx", ".scr", ".sys", ".tsp", ".efi", ".msc", ".msp", ".msu", ".diagcab", ".diagpkg", ".appx", ".appxbundle", ".appxupload", ".msix", ".msixbundle", ".cer", ".cert", ".crt", ".der", ".p7b", ".p7r", ".spc", ".sst", ".stl", ".pfx", ".p12", ".pem", ".key", ".asc", ".pgp", ".gpg", ".odt", ".ods", ".odp", ".odg", ".odc", ".odb", ".odf", ".wpd", ".xls", ".xlsx", ".ppt", ".pptx", ".vsd", ".vsdx", ".vsdm", ".vsd", ".vss", ".vst", ".vdx", ".vsx", ".vtx", ".vssx", ".vstx", ".vssm", ".vstm", ".vsdm", ".vssm", ".vss"},
+		"media":   {".mp3", ".mp4", ".avi", ".mov", ".rmvb", ".rm", ".flv", ".mp4", ".3gp", ".mpeg", ".mpg", ".dat", ".mkv", ".wmv", ".asf", ".asx", ".vob", ".wav", ".wma", ".cda", ".flac", ".m4a", ".mid", ".mka", ".mp2", ".mpa", ".mpc", ".ape", ".ofr", ".ogg", ".ra", ".wv", ".tta", ".ac3", ".dts", ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".ico", ".webp", ".tif", ".tiff", ".pcx", ".tga", ".exif", ".fpx", ".svg", ".psd", ".cdr", ".pcd", ".dxf", ".ufo", ".eps", ".ai", ".raw", ".WMF"},
 	},
 }
 

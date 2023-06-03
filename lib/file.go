@@ -10,6 +10,7 @@ package lib
 
 import (
 	"fmt"
+	"lsh/configs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -69,30 +70,26 @@ func (f *fileStruct) checkFileType() string {
 		if file.Mode()&0111 != 0 {
 			return "executable"
 		} else {
-			// 增加支持的文件类型
-			ext := strings.ToLower(filepath.Ext(f.name))
-			switch ext {
-			case ".txt", ".log", ".md":
-				return "text"
-			case ".doc", ".docx":
-				return "document"
-			case ".ppt", ".pptx":
-				return "presentation"
-			case ".xls", ".xlsx":
-				return "spreadsheet"
-			case ".jpg", ".jpeg", ".png", ".bmp", ".gif":
-				return "image"
-			case ".mp3", ".wav", ".flac", ".ogg":
-				return "audio"
-			case ".mp4", ".mov", ".avi", ".mkv":
-				return "video"
-			default:
-				return "file"
-			}
+			return f.getSuffixFileType()
 		}
 	}
 
 	return "file"
+}
+
+// 根据文件后缀返回文件类型
+func (f *fileStruct) getSuffixFileType() string {
+	// 获取文件后缀不带点
+	suffix := strings.ToLower(filepath.Ext(f.name))
+	// 从SuffixClassify中获取文件类型
+	for fileType, suffixList := range configs.UserConfigs.SuffixClassify {
+		for _, s := range suffixList {
+			if s == suffix {
+				return fileType
+			}
+		}
+	}
+	return "other"
 }
 
 // GetFileList 获取指定路径下的文件列表

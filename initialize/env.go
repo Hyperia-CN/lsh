@@ -75,7 +75,7 @@ func Init() {
 	}
 
 	// 初始化版本号
-	RuntimeInfo.Version = "v1.0.3 (2023-06-03) Beta"
+	RuntimeInfo.Version = "v1.0.4 (2023-06-03) Beta"
 	// 初始化帮助信息
 	RuntimeInfo.Help = `lsh is a CLI tool for managing file comments.
 		Powered by Hyperia.

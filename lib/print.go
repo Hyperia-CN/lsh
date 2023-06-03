@@ -135,24 +135,24 @@ func echoColor(str string, color string) string {
 		if strings.Contains(str, configs.UserConfigs.CommentConnector) && configs.UserConfigs.CommentAlone {
 			tmpStr := ""
 			splitStr := strings.Split(str, configs.UserConfigs.CommentConnector)
-			tmpStr += AddColor(splitStr[0], color)
+			tmpStr += addColor(splitStr[0], color)
 			// 连接注释连接符
 			tmpStr += configs.UserConfigs.CommentConnector
 			// 给注释进行颜色渲染
-			tmpStr += AddColor(splitStr[1], configs.UserConfigs.CommentColor)
+			tmpStr += addColor(splitStr[1], configs.UserConfigs.CommentColor)
 			// 给文件名进行颜色渲染
 			return tmpStr
 			// 连接注释连接符
 			// 给注释进行颜色渲染
 		} else {
-			return AddColor(str, color)
+			return addColor(str, color)
 		}
 	} else {
 		return str
 	}
 }
 
-func AddColor(str string, color string) string {
+func addColor(str string, color string) string {
 	tmpStr := initialize.RuntimeInfo.ColorCode[initialize.RuntimeInfo.OS]["start"]
 	tmpStr += str
 	tmpStr += initialize.RuntimeInfo.ColorCode[initialize.RuntimeInfo.OS]["end"]
@@ -212,7 +212,7 @@ func printFileNames(fileList []*fileStruct) {
 		fmt.Println(rowText)
 	}
 
-	// 当输出模式为end时，输出有注释的文件
+	// 当输出模式为 tail 时，输出有注释的文件
 	if configs.UserConfigs.CommentOutput == "tail" {
 		for _, file := range fileList {
 			if strings.Contains(file.name, configs.UserConfigs.CommentConnector) {
@@ -244,5 +244,5 @@ func PrintError(errMessage string, args ...[]string) {
 		}
 	}
 	// 打印错误信息
-	fmt.Println(AddColor(errMessage, "red"))
+	fmt.Println(addColor(errMessage, "red"))
 }

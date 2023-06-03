@@ -37,22 +37,22 @@ Github有许多优秀的开源的项目，但是因为使用不频繁，项目�
 ## 功能介绍
 1. 支持对指定的「文件/文件夹」「创建/查看/删除」**注释**
 2. 支持基本的ls文件查看功能
-3. 高亮显示
-4. 支持树形结构显示
+3. 支持树形结构显示
+4. 支持高亮显示
 
 ## 安装
 ### Windows install -- 暂不支持
-1. 下载 [release]()
+1. 下载 [release](https://github.com/Hyperia-CN/lsh/releases)
 2. 将下载的文件放入到环境变量中
 3. 打开cmd，输入lsh version，如果出现版本号，则安装成功
 
 ### Linux install   -- 未测试
-1. 下载 [release]()
+1. 下载 [release](https://github.com/Hyperia-CN/lsh/releases)
 2. 将下载的文件放入到环境变量中
 3. 打开终端，输入lsh version，如果出现版本号，则安装成功
 
 ### Mac install
-1. 下载 [release](https://github.com/Hyperia-CN/lsh/releases/download/1.0/lsh_darwin_x86_64)
+1. 下载 [release](https://github.com/Hyperia-CN/lsh/releases)
 2. 将下载的文件放入到环境变量中
 3. 打开终端，输入lsh version，如果出现版本号，则安装成功
 
@@ -65,6 +65,7 @@ Github有许多优秀的开源的项目，但是因为使用不频繁，项目�
     lsh [path] add [comment] // 为指定文件夹添加注释
     lsh [path] del // 删除指定文件夹的注释
     lsh [path] show // 显示指定文件夹的隐藏文件
+    lsh [path] tree // 以树形结构显示指定文件夹下包含注释的文件
     lsh show // 显示隐藏文件
     lsh version // 查看版本号
     lsh help // 查看帮助
@@ -83,6 +84,9 @@ Mac配置文件路径：/Users/<username>/.lshrc
 - 自定义高亮配色方案
 - 自定义注释输出方式
 - 自定义颜色映射
+- 自定义是否显示没有注释的文件
+- 自定义是否默认显示隐藏文件
+- 自定义是否默认不显示无注释的文件
 
 ```yaml
 shownocomment:  # 是否显示没有注释的文件
@@ -110,6 +114,12 @@ colormap: # 颜色映射 注意：颜色映射 id 为终端渲染的 ANSI 颜色
     red: "31"
     white: "37"
     yellow: "33"
+suffixclassify: # 文件后缀分类
+  archive:  # 文件类型
+    - .zip  # 匹配的后缀名
+  exe:
+    - .exe
+    - .msi
 ```
 
 ## TODO: 
@@ -124,6 +134,9 @@ colormap: # 颜色映射 注意：颜色映射 id 为终端渲染的 ANSI 颜色
 
 
 ## 更新日志
+### v1.0.4 (2023-06-03) Beta
+- 增加配置文件自定义文件后缀类型分类
+
 ### v1.0.3 (2023-06-03) Beta
 - 增加tree命令，可以查看指定目录下的文件树
 - 增加配置文件自定义是否显示没有注释的文件
